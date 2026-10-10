@@ -33,3 +33,7 @@ def shout(name: str) -> str:
 
 def whisper(name: str) -> str:
     return f"psst {name.lower()}"
+
+
+def wave(name: str) -> str:
+    return f"👋 {name}"
