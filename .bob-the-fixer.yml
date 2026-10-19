@@ -1,0 +1,21 @@
+review_focus:
+  - bugs
+  - security
+ignore_paths: []
+custom_instructions: |
+  Also apply this Spark batch job review checklist where relevant:
+  1. Debug/Diagnostic: cache repeated actions; use a single .count() call as a quality
+     gate. Flag leftover .show() calls or repeated .count() calls without caching.
+  2. Joins: require explicit broadcast() for asymmetric joins, with skew mitigation
+     documented. Flag reliance on auto-broadcast alone with potentially stale statistics.
+  3. Partitioning & Shuffles: repartition()/coalesce() calls must be annotated with a
+     justification, and output partitioning should match downstream consumption.
+  4. UDFs: prefer built-in Catalyst functions; use vectorized/Pandas UDFs when custom
+     logic is necessary. Flag row-at-a-time Python UDFs at scale.
+  5. Caching Hygiene: cache only when multiple actions reuse the DataFrame; require an
+     explicit unpersist() when no longer needed, especially inside loops.
+  6. Idempotency & Reprocessing: retries must produce identical results; deduplication
+     needs deterministic tie-breakers; overwrite scope must match intent.
+  7. Configuration: cluster and tuning settings must be externalized to job config;
+     non-default values should be commented rather than hardcoded.
+severity_threshold: warning
